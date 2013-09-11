@@ -5,10 +5,10 @@
 		exit('No direct script access allowed');
 	}
 
-	class CI_multilanguage_upd
+	class Ci_multilanguage_upd
 	{
-		public $version = '0.4';
-		private $module_name = "CI_multilanguage";
+		public $version = '0.1';
+		private $module_name = "Ci_multilanguage";
 
 		public function __construct()
 		{
@@ -32,7 +32,7 @@
 
 			// Add action that switches language
 			$data = array(
-				'class'	 => 'CI_multilanguage',
+				'class'	 => 'Ci_multilanguage',
 				'method' => 'action_switch_language'
 			);
 

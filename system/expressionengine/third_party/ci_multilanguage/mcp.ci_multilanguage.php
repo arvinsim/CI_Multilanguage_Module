@@ -5,7 +5,7 @@
 		exit('No direct script access allowed');
 	}
 
-	class CI_multilanguage_mcp
+	class Ci_multilanguage_mcp
 	{
 		public $return_data;
 

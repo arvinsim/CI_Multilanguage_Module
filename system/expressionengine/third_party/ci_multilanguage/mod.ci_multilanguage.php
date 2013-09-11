@@ -5,10 +5,8 @@
 		exit('No direct script access allowed');
 	}
 
-	class CI_multilanguage
+	class Ci_multilanguage
 	{
-		public $return_data;
-
 		private function _get_logged_in_preferred_user_language_id()
 		{
 			$logged_in = (ee()->session->userdata('member_id') == 0) ? FALSE : TRUE;
@@ -61,7 +59,7 @@
 			// Load Admin Model
 			ee()->load->model('admin_model');
 		}
-		
+
 		public function action_switch_language()
 		{
 			$preferred_user_language = $_GET['preferred_user_language'];
@@ -99,7 +97,7 @@
 			$return_url = htmlentities($_GET['return_url']);
 			ee()->functions->redirect($return_url);
 		}
-		
+
 		// A getter of the user language id
 		public function get_user_language_id()
 		{
@@ -144,7 +142,7 @@
 			$tagdata = ee()->TMPL->parse_variables($tagdata, $variables);
 
 			// Get the template tag that will be parsed in the frontend to get the actual_action_id
-			$template_tag_action_id = ee()->functions->fetch_action_id('CI_multilanguage', 'action_switch_language');
+			$template_tag_action_id = ee()->functions->fetch_action_id('Ci_multilanguage', 'action_switch_language');
 
 			// Build an array to hold the form's hidden fields
 			$hidden_fields = array(
@@ -172,7 +170,7 @@
 			$preferred_user_language_id	 = $this->_get_preferred_user_language_id();
 
 			// Get the actual action id as opposed to getting the template tag
-			$action_id = ee()->functions->insert_action_ids(ee()->functions->fetch_action_id('CI_multilanguage', 'action_switch_language'));
+			$action_id = ee()->functions->insert_action_ids(ee()->functions->fetch_action_id('Ci_multilanguage', 'action_switch_language'));
 
 			$variables						 = array();
 			$other_languages				 = array();
@@ -214,7 +212,7 @@
 			$tagdata = ee()->TMPL->parse_variables($tagdata, $variables);
 
 			return $tagdata;
-		}		
+		}
 	}
 
 	/* End of file mod.ci_multilanguage.php */
