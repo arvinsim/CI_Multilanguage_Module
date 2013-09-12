@@ -97,8 +97,30 @@
 			$return_url = htmlentities($_GET['return_url']);
 			ee()->functions->redirect($return_url);
 		}
+		
+		public function get_translation()
+		{
+			$lang_file = (ee()->TMPL->fetch_param('file')) ? ee()->TMPL->fetch_param('file') : 'custom_label';
+			ee()->lang->loadfile($lang_file);
 
-		// A getter of the user language id
+			$name = ee()->TMPL->fetch_param('name');
+			$args = ee()->TMPL->fetch_param('args');
+			
+			$string = (ee()->lang->line($name)) ? ee()->lang->line($name) : '';
+			
+			if($args)
+			{
+				$args_array = explode('||', $args);
+				
+				$string = vsprintf($string, $args_array);
+			}
+
+			return $string;
+		}
+
+		/*
+		 *  A getter of the user language id
+		 */
 		public function get_user_language_id()
 		{
 			return $this->_get_preferred_user_language_id();
