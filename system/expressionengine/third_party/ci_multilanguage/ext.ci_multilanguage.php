@@ -8,7 +8,7 @@
 	class Ci_multilanguage_ext
 	{
 		public $name			 = 'CI Multilanguage';
-		public $version			 = '0.1';
+		public $version			 = '0.2';
 		public $description		 = 'Hooks to set language';
 		public $settings_exist	 = 'n';
 		public $docs_url		 = '';
@@ -104,9 +104,9 @@
 				return FALSE;
 			}
 
-			if ($current < '0.1')
+			if ($current < '0.2')
 			{
-				// Update to version 0.1
+				// Update to version 0.2
 			}
 
 			ee()->db->where('class', __CLASS__);

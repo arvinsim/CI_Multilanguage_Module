@@ -7,7 +7,7 @@
 
 	class Ci_multilanguage_upd
 	{
-		public $version = '0.1';
+		public $version = '0.2';
 		private $module_name = "Ci_multilanguage";
 
 		public function __construct()
