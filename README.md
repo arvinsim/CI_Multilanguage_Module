@@ -50,6 +50,10 @@ Use this function to get a language variable
 ---------------------------------------------------
 Use this to get the id of the language that is currently being used
 
+```{exp:ci_multilanguage:switch_language_form}```
+---------------------------------------------------
+Documentation coming soon
+
 ```{exp:ci_multilanguage:switch_language_list}```
 ---------------------------------------------------
 Use this to get the list of languages available for the 
