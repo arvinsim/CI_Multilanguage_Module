@@ -1,12 +1,22 @@
-CI Multilanguage Modile
+#CI Multilanguage Modile
 =======================
 
 ExpressionEngine module that supports Multilanguage features by leveraging underlying Codeigniter's language structure
 
-# Requirements
+## Requirements
 ExpressionEngine 2.7+
+
+## Changelog
+
+### 0.2
+* Implemented get_translation()
+* Updated README
+
+### 0.1
+* Initial implementation
+
 	
-# How to use
+## How to use
 
 ```{exp:ci_multilanguage:get_translation}```
 -----------------------------------------------
