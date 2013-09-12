@@ -13,11 +13,11 @@ ExpressionEngine 2.7+
 
 Use this function to get a language variable
 
-```
-	{exp:ci_multilanguage:get_translation name="heading_company_name" file="application"}
-```
+<pre>
+{exp:ci_multilanguage:get_translation name="heading_company_name" file="application"}
+</pre>
 
-Parameters
+**Parameters**
 
 <dl>
 	<dt>name</dt>
@@ -28,15 +28,15 @@ Parameters
 	This is used to pass data for language variable strings that need to be "printf"'ed.
 	An example would be a string like 
 
-    This is a %s.</code>
+    <pre>This is a %s.</pre>
 
 	or
 
-    <code>This %s is better than %s.</code>
+    <pre>This %s is better than %s.</pre>
 
 	To pass multiple values, pass a string using || as a separator
 
-    <code>Apples||Oranges||Lemons</code>
+    <pre>Apples||Oranges||Lemons</pre>
 	</dd>
 
 	<dt>file</dt>
@@ -50,10 +50,43 @@ Parameters
 ---------------------------------------------------
 Use this to get the id of the language that is currently being used
 
-
-```{exp:ci_multilanguage:switch_language_form}```
----------------------------------------------------
-
-
 ```{exp:ci_multilanguage:switch_language_list}```
 ---------------------------------------------------
+Use this to get the list of languages available for the 
+
+<pre>
+{exp:ci_multilanguage:switch_language_list}
+	{preferred_user_language_id}
+	{preferred_user_language_name}
+	{other_languages}
+		{link_url}
+		{language_id}
+		{language_name}
+	{/other_languages}
+{/exp:ci_multilanguage:switch_language_list}
+</pre>
+
+**Variables**
+
+<dl>
+	<dt>preferred_user_language_name</dt>
+	<dd>The id of the preferred user language</dd>
+
+	<dt>preferred_user_language_name</dt>
+	<dd>The name of the preferred user language</dd>
+
+	<dt>other_languages</dt>
+	<dd>
+		A list of languages and their data that are not currently selected
+		<dl>
+			<dt>link_url</dt>
+			<dd>the url to go to change the current language into this language</dd>
+
+			<dt>language_id</dt>
+			<dd>The id of the language</dd>
+
+			<dt>language_name</dt>
+			<dd>The name of the language</dd>
+		</dl>
+	</dd>
+</dl>
