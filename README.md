@@ -8,6 +8,10 @@ ExpressionEngine 2.7+
 
 ## Changelog
 
+### 0.3 
+* Added new method, does_translation_exists()
+* Updated get_translation() to return empty string if it cannot find language variable
+
 ### 0.2
 * Implemented get_translation()
 * Updated README
@@ -17,6 +21,20 @@ ExpressionEngine 2.7+
 
 	
 ## How to use
+
+```{exp:ci_multilanguage:does_language_exists}```
+---------------------------------------------------
+Use this to check if a language variable exists
+
+<pre>
+{exp:ci_multilanguage:does_language_exists name="heading_company_name"}
+</pre>
+
+**Parameters**
+<dl>
+	<dt>name</dt>
+	<dd>The key of the language variable</dd>
+</dl>
 
 ```{exp:ci_multilanguage:get_translation}```
 -----------------------------------------------

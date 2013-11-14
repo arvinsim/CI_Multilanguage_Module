@@ -1,241 +1,243 @@
 <?php
 
-	if (!defined('BASEPATH'))
-	{
-		exit('No direct script access allowed');
-	}
+    if (!defined('BASEPATH')) {
+        exit('No direct script access allowed');
+    }
 
-	class Ci_multilanguage
-	{
-		private function _get_logged_in_preferred_user_language_id()
-		{
-			$logged_in = (ee()->session->userdata('member_id') == 0) ? FALSE : TRUE;
-			if ($logged_in === TRUE)
-			{
-				$member_id = ee()->session->userdata('member_id');
+    class Ci_multilanguage
+    {
 
-				$sql = "
-					SELECT
-						`exp_members`.`language`
-					FROM
-						`exp_members`
-					WHERE
-						`exp_members`.`member_id` = '{$member_id}'
-					LIMIT 1
-				";
+        private function _get_logged_in_preferred_user_language_id()
+        {
+            $logged_in = (ee()->session->userdata('member_id') == 0) ? FALSE : TRUE;
+            if ($logged_in === TRUE) {
+                $member_id = ee()->session->userdata('member_id');
 
-				$row_array = ee()->db->query($sql)->row_array();
-				return $row_array['language'];
-			}
-			else
-			{
-				return FALSE;
-			}
-		}
+                $sql = "
+                    SELECT
+                            `exp_members`.`language`
+                    FROM
+                            `exp_members`
+                    WHERE
+                            `exp_members`.`member_id` = '{$member_id}'
+                    LIMIT 1
+		";
 
-		private function _get_preferred_user_language_id()
-		{
-			$logged_in_preferred_user_language_id = $this->_get_logged_in_preferred_user_language_id();
-			if ($logged_in_preferred_user_language_id === FALSE)
-			{
-				$cookie_preferred_user_language_id = ee()->input->cookie('preferred_user_language');
-				if ($cookie_preferred_user_language_id === FALSE)
-				{
-					return ee()->config->item('language');
-				}
-				else
-				{
-					return $cookie_preferred_user_language_id;
-				}
-			}
-			else
-			{
-				return $logged_in_preferred_user_language_id;
-			}
-		}
+                $row_array = ee()->db->query($sql)->row_array();
+                return $row_array['language'];
+            }
+            else {
+                return FALSE;
+            }
+        }
 
-		public function __construct()
-		{
-			// Load Admin Model
-			ee()->load->model('admin_model');
-		}
+        private function _get_preferred_user_language_id()
+        {
+            $logged_in_preferred_user_language_id = $this->_get_logged_in_preferred_user_language_id();
+            if ($logged_in_preferred_user_language_id === FALSE) {
+                $cookie_preferred_user_language_id = ee()->input->cookie('preferred_user_language');
+                if ($cookie_preferred_user_language_id === FALSE) {
+                    return ee()->config->item('language');
+                }
+                else {
+                    return $cookie_preferred_user_language_id;
+                }
+            }
+            else {
+                return $logged_in_preferred_user_language_id;
+            }
+        }
 
-		public function action_switch_language()
-		{
-			$preferred_user_language = $_GET['preferred_user_language'];
+        public function __construct()
+        {
+            // Load Admin Model
+            ee()->load->model('admin_model');
+        }
 
-			// Check if cookie is in the list of languages available
-			$installed_languages = ee()->admin_model->get_installed_language_packs();
+        public function action_switch_language()
+        {
+            $preferred_user_language = $_GET['preferred_user_language'];
 
-			$is_preferred_user_language_valid = FALSE;
-			foreach ($installed_languages as $language_key => $language_value)
-			{
-				if ($language_key === $preferred_user_language)
-				{
-					$is_preferred_user_language_valid = TRUE;
-					break;
-				}
-			}
+            // Check if cookie is in the list of languages available
+            $installed_languages = ee()->admin_model->get_installed_language_packs();
 
-			// Set Cookie if cookie preferred_user_language is valid
-			if ($is_preferred_user_language_valid === TRUE)
-			{
-				// Set a cookie that expires in 1 day(3600 seconds * 24)
-				ee()->functions->set_cookie('preferred_user_language', $preferred_user_language, 3600 * 24);
+            $is_preferred_user_language_valid = FALSE;
+            foreach ($installed_languages as $language_key => $language_value) {
+                if ($language_key === $preferred_user_language) {
+                    $is_preferred_user_language_valid = TRUE;
+                    break;
+                }
+            }
 
-				$logged_in = (ee()->session->userdata('member_id') == 0) ? FALSE : TRUE;
-				if ($logged_in === TRUE)
-				{
-					$member_id = ee()->session->userdata('member_id');
+            // Set Cookie if cookie preferred_user_language is valid
+            if ($is_preferred_user_language_valid === TRUE) {
+                // Set a cookie that expires in 1 day(3600 seconds * 24)
+                ee()->functions->set_cookie('preferred_user_language', $preferred_user_language, 3600 * 24);
 
-					$sql = "UPDATE `exp_members` SET `exp_members`.`language` = '{$preferred_user_language}' WHERE `exp_members`.`member_id` = '{$member_id}'";
+                $logged_in = (ee()->session->userdata('member_id') == 0) ? FALSE : TRUE;
+                if ($logged_in === TRUE) {
+                    $member_id = ee()->session->userdata('member_id');
 
-					ee()->db->query($sql);
-				}
-			}
+                    $sql = "UPDATE `exp_members` SET `exp_members`.`language` = '{$preferred_user_language}' WHERE `exp_members`.`member_id` = '{$member_id}'";
 
-			$return_url = htmlentities($_GET['return_url']);
-			ee()->functions->redirect($return_url);
-		}
-		
-		public function get_translation()
-		{
-			$lang_file = (ee()->TMPL->fetch_param('file')) ? ee()->TMPL->fetch_param('file') : 'custom_label';
-			ee()->lang->loadfile($lang_file);
+                    ee()->db->query($sql);
+                }
+            }
 
-			$name = ee()->TMPL->fetch_param('name');
-			$args = ee()->TMPL->fetch_param('args');
-			
-			$string = (ee()->lang->line($name)) ? ee()->lang->line($name) : '';
-			
-			if($args)
-			{
-				$args_array = explode('||', $args);
-				
-				$string = vsprintf($string, $args_array);
-			}
+            $return_url = htmlentities($_GET['return_url']);
+            ee()->functions->redirect($return_url);
+        }
 
-			return $string;
-		}
+        public function does_translation_exist()
+        {
+            $name = ee()->TMPL->fetch_param('name');
 
-		/*
-		 *  A getter of the user language id
-		 */
-		public function get_user_language_id()
-		{
-			return $this->_get_preferred_user_language_id();
-		}
+            $translation = ee()->lang->line($name);
 
-		public function switch_language_form()
-		{
-			// Set variables			
-			$installed_languages = ee()->admin_model->get_installed_language_packs();
+            if ($translation === '' OR $translation === $name) {
+                return 'no';
+            }
+            else {
+                return 'yes';
+            }
+        }
 
-			$variables					 = array();
-			$variable_row				 = array(
-				'languages' => array()
-			);
-			$preferred_user_language_id	 = $this->_get_preferred_user_language_id();
+        public function get_translation()
+        {
+            $lang_file = (ee()->TMPL->fetch_param('file')) ? ee()->TMPL->fetch_param('file') : 'custom_label';
+            ee()->lang->loadfile($lang_file);
 
-			foreach ($installed_languages as $language_id => $language_name)
-			{
-				$data = array(
-					'language_id'	 => $language_id,
-					'language_name'	 => $language_name
-				);
+            $name = ee()->TMPL->fetch_param('name');
+            $args = ee()->TMPL->fetch_param('args');
 
-				if ($preferred_user_language_id === $language_id)
-				{
-					$data['selected'] = "selected='selected'";
-				}
-				else
-				{
-					$data['selected'] = "";
-				}
+            // NOTE: If the resulting language file is the same as the name passed
+            // then the language variable doesn't exist. Check if this is the case and 
+            // return an empty string if true
+            $string = (ee()->lang->line($name) != $name) ? ee()->lang->line($name) : '';
 
-				$variable_row['languages'][] = $data;
-			}
-			$variables[] = $variable_row;
+            if ($args) {
+                $args_array = explode('||', $args);
 
-			// Fetch contents of the tag pair, ie, the form contents
-			$tagdata = ee()->TMPL->tagdata;
+                $string = vsprintf($string, $args_array);
+            }
 
-			// Parse Language variables
-			$tagdata = ee()->TMPL->parse_variables($tagdata, $variables);
+            return $string;
+        }
 
-			// Get the template tag that will be parsed in the frontend to get the actual_action_id
-			$template_tag_action_id = ee()->functions->fetch_action_id('Ci_multilanguage', 'action_switch_language');
+        /*
+         *  A getter of the user language id
+         */
 
-			// Build an array to hold the form's hidden fields
-			$hidden_fields = array(
-				'return_url' => ee()->functions->fetch_current_uri(),
-				'ACT'		 => $template_tag_action_id
-			);
+        public function get_user_language_id()
+        {
+            return $this->_get_preferred_user_language_id();
+        }
 
-			// Build an array with the form data
-			$form_data = array(
-				'id'			 => ee()->TMPL->form_id,
-				'class'			 => ee()->TMPL->form_class,
-				'hidden_fields'	 => $hidden_fields
-			);
+        public function switch_language_form()
+        {
+            // Set variables			
+            $installed_languages = ee()->admin_model->get_installed_language_packs();
 
-			$form = ee()->functions->form_declaration($form_data) .
-					$tagdata . "</form>";
+            $variables                  = array();
+            $variable_row               = array(
+                'languages' => array()
+            );
+            $preferred_user_language_id = $this->_get_preferred_user_language_id();
 
-			return $form;
-		}
+            foreach ($installed_languages as $language_id => $language_name) {
+                $data = array(
+                    'language_id'   => $language_id,
+                    'language_name' => $language_name
+                );
 
-		public function switch_language_list()
-		{
-			// Set variables
-			$installed_languages		 = ee()->admin_model->get_installed_language_packs();
-			$preferred_user_language_id	 = $this->_get_preferred_user_language_id();
+                if ($preferred_user_language_id === $language_id) {
+                    $data['selected'] = "selected='selected'";
+                }
+                else {
+                    $data['selected'] = "";
+                }
 
-			// Get the actual action id as opposed to getting the template tag
-			$action_id = ee()->functions->insert_action_ids(ee()->functions->fetch_action_id('Ci_multilanguage', 'action_switch_language'));
+                $variable_row['languages'][] = $data;
+            }
+            $variables[] = $variable_row;
 
-			$variables						 = array();
-			$other_languages				 = array();
-			$preferred_user_language_name	 = "";
-			foreach ($installed_languages as $language_id => $language_name)
-			{
-				$href = http_build_query(array(
-					'ACT'						 => $action_id,
-					'return_url'				 => ee()->functions->fetch_current_uri(),
-					'site_id'					 => '1',
-					'preferred_user_language'	 => $language_id,
-				));
+            // Fetch contents of the tag pair, ie, the form contents
+            $tagdata = ee()->TMPL->tagdata;
 
-				$data = array(
-					'language_id'	 => $language_id,
-					'language_name'	 => $language_name,
-					'link_url'		 => ee()->functions->fetch_site_index() . '?' . $href
-				);
+            // Parse Language variables
+            $tagdata = ee()->TMPL->parse_variables($tagdata, $variables);
 
-				if ($preferred_user_language_id === $language_id)
-				{
-					$preferred_user_language_name = $language_name;
-				}
-				else
-				{
-					$other_languages[] = $data;
-				}
-			}
-			$variables[] = array(
-				'preferred_user_language_id'	 => $preferred_user_language_id,
-				'preferred_user_language_name'	 => $preferred_user_language_name,
-				'other_languages'				 => $other_languages
-			);
+            // Get the template tag that will be parsed in the frontend to get the actual_action_id
+            $template_tag_action_id = ee()->functions->fetch_action_id('Ci_multilanguage', 'action_switch_language');
 
-			// Fetch contents of the tag pair, ie, the form contents
-			$tagdata = ee()->TMPL->tagdata;
+            // Build an array to hold the form's hidden fields
+            $hidden_fields = array(
+                'return_url' => ee()->functions->fetch_current_uri(),
+                'ACT'        => $template_tag_action_id
+            );
 
-			// Parse Language variables
-			$tagdata = ee()->TMPL->parse_variables($tagdata, $variables);
+            // Build an array with the form data
+            $form_data = array(
+                'id'            => ee()->TMPL->form_id,
+                'class'         => ee()->TMPL->form_class,
+                'hidden_fields' => $hidden_fields
+            );
 
-			return $tagdata;
-		}
-	}
+            $form = ee()->functions->form_declaration($form_data) .
+                    $tagdata . "</form>";
 
-	/* End of file mod.ci_multilanguage.php */
+            return $form;
+        }
+
+        public function switch_language_list()
+        {
+            // Set variables
+            $installed_languages        = ee()->admin_model->get_installed_language_packs();
+            $preferred_user_language_id = $this->_get_preferred_user_language_id();
+
+            // Get the actual action id as opposed to getting the template tag
+            $action_id = ee()->functions->insert_action_ids(ee()->functions->fetch_action_id('Ci_multilanguage', 'action_switch_language'));
+
+            $variables                    = array();
+            $other_languages              = array();
+            $preferred_user_language_name = "";
+            foreach ($installed_languages as $language_id => $language_name) {
+                $href = http_build_query(array(
+                    'ACT'                     => $action_id,
+                    'return_url'              => ee()->functions->fetch_current_uri(),
+                    'site_id'                 => '1',
+                    'preferred_user_language' => $language_id,
+                ));
+
+                $data = array(
+                    'language_id'   => $language_id,
+                    'language_name' => $language_name,
+                    'link_url'      => ee()->functions->fetch_site_index() . '?' . $href
+                );
+
+                if ($preferred_user_language_id === $language_id) {
+                    $preferred_user_language_name = $language_name;
+                }
+                else {
+                    $other_languages[] = $data;
+                }
+            }
+            $variables[] = array(
+                'preferred_user_language_id'   => $preferred_user_language_id,
+                'preferred_user_language_name' => $preferred_user_language_name,
+                'other_languages'              => $other_languages
+            );
+
+            // Fetch contents of the tag pair, ie, the form contents
+            $tagdata = ee()->TMPL->tagdata;
+
+            // Parse Language variables
+            $tagdata = ee()->TMPL->parse_variables($tagdata, $variables);
+
+            return $tagdata;
+        }
+
+    }
+
+    /* End of file mod.ci_multilanguage.php */
 	/* Location: /system/expressionengine/third_party/ci_multilanguage/mod.ci_multilanguage.php */
